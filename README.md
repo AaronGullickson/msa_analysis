@@ -1,0 +1,1 @@
+This repository was for a class project in Soc 445/545 where students used Social Explorer data to genrate statistics about racial inequality and segregation in a city. I then ran those same statistics across all US cities (MSAs).
