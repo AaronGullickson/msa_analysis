@@ -1,0 +1,270 @@
+---
+title: "Analyzing City Data on Racial Inequality"
+subtitle: "Soc 445/545, Spring 2023"
+execute: 
+  echo: false
+format: html
+---
+
+```{r}
+#| label: load-stuff
+#| include: false
+library(tidyverse)
+library(ggrepel)
+library(ggthemes)
+msa_students <- read_csv("data_raw/student_msa.csv")
+load("data_constructed/full_msa.RData")
+```
+
+```{r}
+#| label: wb-dissim-dot
+
+ggplot(msa_students, aes(x=reorder(city, dissim_wb, max), y=dissim_wb))+
+  #geom_col(fill="seagreen")+
+  geom_point()+
+  coord_flip()+
+  labs(x=NULL, y="Black/White Dissimilarity Index")+
+  theme_bw()
+```
+
+```{r}
+#| label: wa-dissim-dot
+
+ggplot(msa_students, aes(x=reorder(city, dissim_wa, max), y=dissim_wa))+
+  #geom_col(fill="seagreen")+
+  geom_point()+
+  coord_flip()+
+  labs(x=NULL, y="Asian/White Dissimilarity Index")+
+  theme_bw()
+```
+
+```{r}
+#| label: wa-wb-compare
+
+ggplot(msa_students, aes(x=reorder(city, dissim_wb, max), y=dissim_wb))+
+  #geom_col(fill="seagreen")+
+  geom_point(col="grey20")+
+  geom_point(aes(y=dissim_wa), col="red")+
+  coord_flip()+
+  labs(x=NULL, y="Dissimilarity Index")+
+  theme_bw()
+```
+
+
+```{r}
+#| label: wb-wa-scatter
+
+ggplot(msa_students, aes(x=dissim_wa, y=dissim_wb))+
+  geom_point()+
+  geom_text_repel(aes(label=city))+
+  labs(x="Asian/White Dissimilarity Index", y="Black/White Dissimilarity Index")+
+  theme_bw()
+```
+
+```{r}
+#| label: wb-wl-compare
+
+ggplot(msa_students, aes(x=reorder(city, dissim_wb, max), y=dissim_wb))+
+  #geom_col(fill="seagreen")+
+  geom_point(col="grey20")+
+  geom_point(aes(y=dissim_wl), col="red")+
+  coord_flip()+
+  labs(x=NULL, y="Dissimilarity Index")+
+  theme_bw()
+```
+```{r}
+#| label: wl-dissim-dot
+
+ggplot(msa_students, aes(x=reorder(city, dissim_wl, max), y=dissim_wl))+
+  #geom_col(fill="seagreen")+
+  geom_point(size=3)+
+  coord_flip()+
+  labs(x=NULL, y="Latino/White Dissimilarity Index")+
+  theme_bw()+
+  theme(text = element_text(size=20))
+```
+```{r}
+#| label: wb-wl-scatter
+
+ggplot(msa_students, aes(x=dissim_wl, y=dissim_wb))+
+  geom_point()+
+  geom_text_repel(aes(label=city))+
+  labs(x="Latino/White Dissimilarity Index", y="Black/White Dissimilarity Index")+
+  theme_bw()
+```
+
+```{r}
+#| label: wl-wa-scatter
+
+ggplot(msa_students, aes(x=dissim_wl, y=dissim_wa))+
+  geom_point()+
+  geom_text_repel(aes(label=city))+
+  labs(x="Latino/White Dissimilarity Index", y="Asian/White Dissimilarity Index")+
+  theme_bw()
+```
+```{r}
+#| label: wb-pov-dot
+
+ggplot(msa_students, aes(x=reorder(city, pov_ratio_wb, max), y=pov_ratio_wb))+
+  #geom_col(fill="seagreen")+
+  geom_point()+
+  coord_flip()+
+  labs(x=NULL, y="Black/White Poverty Ratio")+
+  theme_bw()
+```
+```{r}
+#| label: wb-pov-dis-scatter
+
+ggplot(msa_students, aes(x=dissim_wb, y=pov_ratio_wb))+
+  #geom_col(fill="seagreen")+
+  geom_point()+
+  geom_smooth(method="lm", se=FALSE)+
+  geom_text_repel(aes(label=city))+
+  labs(x="Black/White Dissimilarity Index", y="Black/White Poverty Ratio")+
+  theme_bw()
+```
+
+```{r}
+#| label: wa-pov-dis-scatter
+
+ggplot(msa_students, aes(x=dissim_wa, y=pov_ratio_wa))+
+  #geom_col(fill="seagreen")+
+  geom_point()+
+  geom_smooth(method="lm", se=FALSE)+
+  geom_hline(yintercept = 1, linetype=2)+
+  geom_text_repel(aes(label=city))+
+  labs(x="Asian/White Dissimilarity Index", y="Asian/White Poverty Ratio")+
+  theme_bw()
+```
+
+```{r}
+#| label: wl-pov-dis-scatter
+
+ggplot(msa_students, aes(x=dissim_wl, y=unemp_wl))+
+  #geom_col(fill="seagreen")+
+  geom_point()+
+  geom_smooth(method="lm", se=FALSE)+
+  geom_hline(yintercept = 1, linetype=2)+
+  geom_text_repel(aes(label=city))+
+  labs(x="Latino/White Dissimilarity Index", y="Latino/White Poverty Ratio")+
+  theme_bw()
+```
+
+```{r}
+#| label: wb-unemp-dis-scatter
+
+ggplot(msa_students, aes(x=dissim_wb, y=unemp_ratio_wb))+
+  #geom_col(fill="seagreen")+
+  geom_point()+
+  geom_hline(yintercept = 1, linetype=2)+
+  geom_smooth(method="lm", se=FALSE)+
+  geom_text_repel(aes(label=city))+
+  labs(x="Black/White Dissimilarity Index", y="Black/White Unemployment Ratio")+
+  theme_bw()
+```
+
+```{r}
+#| label: wa-unemp-dis-scatter
+
+ggplot(msa_students, aes(x=dissim_wa, y=unemp_ratio_wa))+
+  #geom_col(fill="seagreen")+
+  geom_point()+
+  geom_hline(yintercept = 1, linetype=2)+
+  geom_smooth(method="lm", se=FALSE)+
+  geom_text_repel(aes(label=city))+
+  labs(x="Asian/White Dissimilarity Index", y="Asian/White Unemployment Ratio")+
+  theme_bw()
+```
+
+```{r}
+#| label: wl-unemp-dis-scatter
+
+ggplot(msa_students, aes(x=dissim_wl, y=unemp_ratio_wl))+
+  #geom_col(fill="seagreen")+
+  geom_point()+
+  geom_hline(yintercept = 1, linetype=2)+
+  geom_smooth(method="lm", se=FALSE)+
+  geom_text_repel(aes(label=city))+
+  labs(x="Latino/White Dissimilarity Index", y="Latino/White Unemployment Ratio")+
+  theme_bw()
+```
+
+```{r}
+#| label: wb-pov-dis-scatter-full
+
+ggplot(msa, aes(x=dissim_wb, y=pov_ratio_wb))+
+  #geom_col(fill="seagreen")+
+  geom_point()+
+  geom_hline(yintercept = 1, linetype=2)+
+  geom_smooth(method="lm", se=FALSE)+
+  #geom_text_repel(aes(label=msa_name))+
+  labs(x="Black/White Dissimilarity Index", y="Black/White Poverty Ratio")+
+  theme_bw()
+```
+
+```{r}
+#| label: wb-unemp-dis-scatter-full
+
+ggplot(msa, aes(x=dissim_wb, y=unemp_ratio_wb))+
+  #geom_col(fill="seagreen")+
+  geom_point()+
+  geom_hline(yintercept = 1, linetype=2)+
+  geom_smooth(method="lm", se=FALSE)+
+  #geom_text_repel(aes(label=msa_name))+
+  labs(x="Black/White Dissimilarity Index", y="Black/White Unemployment Ratio")+
+  theme_bw()
+```
+
+```{r}
+#| label: wa-pov-dis-scatter-full
+
+ggplot(msa, aes(x=dissim_wa, y=pov_ratio_wa))+
+  #geom_col(fill="seagreen")+
+  geom_point()+
+  geom_hline(yintercept = 1, linetype=2)+
+  geom_smooth(method="lm", se=FALSE)+
+  #geom_text_repel(aes(label=msa_name))+
+  labs(x="Asian/White Dissimilarity Index", y="Asian/White Poverty Ratio")+
+  theme_bw()
+```
+
+```{r}
+#| label: wa-unemp-dis-scatter-full
+
+ggplot(msa, aes(x=dissim_wa, y=unemp_ratio_wa))+
+  #geom_col(fill="seagreen")+
+  geom_point()+
+  geom_hline(yintercept = 1, linetype=2)+
+  geom_smooth(method="lm", se=FALSE)+
+  #geom_text_repel(aes(label=msa_name))+
+  labs(x="Asian/White Dissimilarity Index", y="Asian/White Unemployment Ratio")+
+  theme_bw()
+```
+
+```{r}
+#| label: wl-pov-dis-scatter-full
+
+ggplot(msa, aes(x=dissim_wl, y=pov_ratio_wl))+
+  #geom_col(fill="seagreen")+
+  geom_point()+
+  geom_hline(yintercept = 1, linetype=2)+
+  geom_smooth(method="lm", se=FALSE)+
+  #geom_text_repel(aes(label=msa_name))+
+  labs(x="Latino/White Dissimilarity Index", y="Latino/White Poverty Ratio")+
+  theme_bw()
+```
+
+```{r}
+#| label: wl-unemp-dis-scatter-full
+
+ggplot(msa, aes(x=dissim_wl, y=unemp_ratio_wl))+
+  #geom_col(fill="seagreen")+
+  geom_point()+
+  geom_hline(yintercept = 1, linetype=2)+
+  geom_smooth(method="lm", se=FALSE)+
+  #geom_text_repel(aes(label=msa_name))+
+  labs(x="Latino/White Dissimilarity Index", y="Latino/White Unemployment Ratio")+
+  theme_bw()
+```
+
+

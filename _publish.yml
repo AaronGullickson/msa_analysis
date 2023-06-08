@@ -1,0 +1,4 @@
+- source: city_analysis.qmd
+  quarto-pub:
+    - id: 3f680110-ef8b-4765-a0ac-1fd0d00bbe15
+      url: 'https://aarongullickson.quarto.pub/analyzing-city-data-on-racial-inequality'
